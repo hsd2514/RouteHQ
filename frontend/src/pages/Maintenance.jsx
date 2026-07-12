@@ -3,6 +3,7 @@ import client from "../api/client";
 import DataTable from "../components/shared/DataTable";
 import StatusBadge from "../components/shared/StatusBadge";
 import Modal from "../components/shared/Modal";
+import Toast from "../components/shared/Toast";
 import { useAuth } from "../context/AuthContext";
 
 const labelCls = "block text-[10px] uppercase tracking-[0.12em] font-mono-hq mb-1";
@@ -18,6 +19,7 @@ export default function Maintenance() {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [addLogError, setAddLogError] = useState("");
+  const [toast, setToast] = useState("");
   const [newLog, setNewLog] = useState({
     vehicle_id: "",
     issue_description: "",
@@ -80,7 +82,7 @@ export default function Maintenance() {
       await client.post(`/maintenance/${id}/close`);
       await fetchData();
     } catch (err) {
-      alert(err.response?.data?.detail || "Failed to close maintenance log.");
+      setToast(err.response?.data?.detail || "Failed to close maintenance log.");
     }
   };
 
@@ -127,6 +129,8 @@ export default function Maintenance() {
 
   return (
     <div className="p-5 space-y-4">
+      {toast && <Toast message={toast} onClose={() => setToast("")} />}
+
       {/* Title Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

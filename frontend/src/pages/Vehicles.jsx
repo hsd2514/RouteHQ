@@ -3,6 +3,7 @@ import client from "../api/client";
 import DataTable from "../components/shared/DataTable";
 import StatusBadge from "../components/shared/StatusBadge";
 import Modal from "../components/shared/Modal";
+import Toast from "../components/shared/Toast";
 import { useAuth } from "../context/AuthContext";
 
 const labelCls = "block text-[10px] uppercase tracking-[0.12em] font-mono-hq mb-1";
@@ -34,6 +35,7 @@ export default function Vehicles() {
 
   // History Modal State
   const [selectedHistory, setSelectedHistory] = useState(null);
+  const [toast, setToast] = useState("");
 
   const fetchVehicles = async () => {
     try {
@@ -98,7 +100,7 @@ export default function Vehicles() {
       const response = await client.get(`/vehicles/${row.id}/history`);
       setSelectedHistory(response.data);
     } catch (err) {
-      alert(err.response?.data?.detail || "Failed to load vehicle history.");
+      setToast(err.response?.data?.detail || "Failed to load vehicle history.");
     }
   };
 
@@ -135,6 +137,8 @@ export default function Vehicles() {
 
   return (
     <div className="p-5 space-y-4">
+      {toast && <Toast message={toast} onClose={() => setToast("")} />}
+
       {/* Title Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

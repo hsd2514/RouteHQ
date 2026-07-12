@@ -10,6 +10,7 @@ from app.auth import (
     verify_password,
     create_reset_token,
     decode_reset_token,
+    verify_reset_fingerprint,
 )
 from app.database import get_db
 
@@ -62,7 +63,7 @@ def me(current_user: models.User = Depends(get_current_user)):
 def forgot_password(payload: schemas.ForgotPasswordIn, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == payload.email).first()
     if user:
-        token = create_reset_token({"sub": str(user.id)})
+        token = create_reset_token({"sub": str(user.id)}, user.password_hash)
         # Simulate sending email
         print(f"\n=== SIMULATED EMAIL ===")
         print(f"To: {user.email}")
@@ -82,8 +83,8 @@ def reset_password(payload: schemas.ResetPasswordIn, db: Session = Depends(get_d
         raise HTTPException(status_code=400, detail="Invalid or expired reset token")
 
     user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=400, detail="User not found")
+    if not user or not verify_reset_fingerprint(token_data, user.password_hash):
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
 
     user.password_hash = hash_password(payload.new_password)
     db.commit()

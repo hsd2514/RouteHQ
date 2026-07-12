@@ -1,3 +1,4 @@
+import hashlib
 import os
 from datetime import datetime, timedelta, timezone
 
@@ -37,18 +38,36 @@ def decode_access_token(token: str) -> dict:
     return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
 
 
-def create_reset_token(data: dict) -> str:
+def _password_fingerprint(password_hash: str) -> str:
+    """Short digest of the current password hash, embedded in reset tokens.
+
+    Since hash_password() salts every hash uniquely, this fingerprint changes
+    on every successful reset -- making a reset token single-use without
+    needing a database table of spent tokens: once the password changes, any
+    previously issued token's fingerprint no longer matches.
+    """
+    return hashlib.sha256(password_hash.encode("utf-8")).hexdigest()[:16]
+
+
+def create_reset_token(data: dict, password_hash: str) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire, "type": "reset"})
+    to_encode.update({"exp": expire, "type": "reset", "pwv": _password_fingerprint(password_hash)})
     return jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 
 def decode_reset_token(token: str) -> dict:
+    """Validates signature, expiry, and token type only. The caller must
+    separately verify payload["pwv"] against the target user's current
+    password hash via verify_reset_fingerprint() once the user is loaded."""
     payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
     if payload.get("type") != "reset":
         raise JWTError("Invalid token type")
     return payload
+
+
+def verify_reset_fingerprint(payload: dict, password_hash: str) -> bool:
+    return payload.get("pwv") == _password_fingerprint(password_hash)
 
 
 def get_current_user(

@@ -3,25 +3,7 @@ import client from "../api/client";
 import DataTable from "../components/shared/DataTable";
 import Modal from "../components/shared/Modal";
 import StatusBadge from "../components/shared/StatusBadge";
-
-// ── Toast ─────────────────────────────────────────────────────────────────────
-function Toast({ message, onClose }) {
-  if (!message) return null;
-  return (
-    <div
-      id="trip-error-toast"
-      className="hq-rise flex items-start gap-3 px-4 py-3 text-sm border font-mono-hq"
-      style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}
-      role="alert"
-    >
-      <span className="mt-0.5 shrink-0">⚠</span>
-      <span className="flex-1 break-words">{message}</span>
-      <button onClick={onClose} className="ml-2 shrink-0 hover:opacity-70" aria-label="Dismiss">
-        ✕
-      </button>
-    </div>
-  );
-}
+import Toast from "../components/shared/Toast";
 
 // ── Lifecycle stepper (visual only) ──────────────────────────────────────────
 const LIFECYCLE = ["draft", "dispatched", "completed", "cancelled"];

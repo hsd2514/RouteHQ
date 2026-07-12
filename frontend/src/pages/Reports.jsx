@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import client from "../api/client";
 import DataTable from "../components/shared/DataTable";
+import Toast from "../components/shared/Toast";
 
 export default function Reports() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [toast, setToast] = useState("");
 
   const fetchReports = async () => {
     try {
@@ -37,7 +39,7 @@ export default function Reports() {
       link.click();
       link.parentNode.removeChild(link);
     } catch (err) {
-      alert("Failed to download CSV.");
+      setToast("Failed to download CSV.");
     }
   };
 
@@ -54,6 +56,8 @@ export default function Reports() {
 
   return (
     <div className="p-4 space-y-4">
+      {toast && <Toast message={toast} onClose={() => setToast("")} />}
+
       {/* Title Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
