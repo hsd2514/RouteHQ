@@ -3,6 +3,10 @@ import client from "../api/client";
 import DataTable from "../components/shared/DataTable";
 import { useAuth } from "../context/AuthContext";
 
+const labelCls = "block text-[10px] uppercase tracking-[0.12em] font-mono-hq mb-1";
+const inputCls = "hq-glow w-full px-3 py-2 text-sm border outline-none font-mono-hq";
+const inputStyle = { background: "var(--hq-bg)", borderColor: "var(--hq-border)", color: "var(--hq-text)" };
+
 export default function FuelExpenses() {
   const { user } = useAuth();
   const canAdd = ["fleet_manager", "financial_analyst", "driver"].includes(user?.role);
@@ -129,25 +133,22 @@ export default function FuelExpenses() {
 
   const activeVehicles = vehicles.filter((v) => v.status !== "retired");
 
-  const inputCls = "w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500";
-  const labelCls = "block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1";
-
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-5 space-y-6">
       {/* Title Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-            Fuel & Expenses
+          <h1 className="font-display font-bold text-xl" style={{ color: "var(--hq-text)" }}>
+            Fuel &amp; Expenses
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm mt-0.5" style={{ color: "var(--hq-text-dim)" }}>
             Log and monitor fleet fuel consumption and other expenses.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 text-red-500 border border-red-500/40 bg-red-500/10 rounded-md">
+        <div className="text-sm px-3 py-2 border font-mono-hq" style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}>
           {error}
         </div>
       )}
@@ -155,75 +156,97 @@ export default function FuelExpenses() {
       {canAdd && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Fuel Log Form */}
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-md border border-gray-200 dark:border-gray-800 shadow-sm">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Log Fuel</h2>
+          <div className="hq-panel p-4">
+            <h2 className="font-display font-semibold text-sm uppercase tracking-wider mb-4" style={{ color: "var(--hq-text)" }}>
+              Log Fuel
+            </h2>
             <form onSubmit={handleFuelSubmit} className="space-y-3">
-              {fuelError && <div className="text-sm text-red-500 border border-red-500/40 bg-red-500/10 rounded-md px-3 py-2">{fuelError}</div>}
+              {fuelError && (
+                <div className="text-sm px-3 py-2 border font-mono-hq" style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}>
+                  {fuelError}
+                </div>
+              )}
               <div>
-                <label className={labelCls}>Vehicle</label>
-                <select required value={fuelForm.vehicle_id} onChange={(e) => setFuelForm({ ...fuelForm, vehicle_id: e.target.value })} className={inputCls}>
-                  <option value="" className="text-gray-400">-- Choose Vehicle --</option>
+                <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Vehicle</label>
+                <select required value={fuelForm.vehicle_id} onChange={(e) => setFuelForm({ ...fuelForm, vehicle_id: e.target.value })} className={inputCls} style={inputStyle}>
+                  <option value="">-- Choose Vehicle --</option>
                   {activeVehicles.map((v) => (
-                    <option key={v.id} value={v.id} className="bg-white dark:bg-gray-900">{v.name} ({v.reg_number})</option>
+                    <option key={v.id} value={v.id}>{v.name} ({v.reg_number})</option>
                   ))}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className={labelCls}>Liters</label>
-                  <input type="number" step="any" required value={fuelForm.liters} onChange={(e) => setFuelForm({ ...fuelForm, liters: e.target.value })} className={inputCls} placeholder="0" />
+                  <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Liters</label>
+                  <input type="number" step="any" required value={fuelForm.liters} onChange={(e) => setFuelForm({ ...fuelForm, liters: e.target.value })} className={inputCls} style={inputStyle} placeholder="0" />
                 </div>
                 <div>
-                  <label className={labelCls}>Cost (₹)</label>
-                  <input type="number" step="any" required value={fuelForm.cost} onChange={(e) => setFuelForm({ ...fuelForm, cost: e.target.value })} className={inputCls} placeholder="0" />
+                  <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Cost (₹)</label>
+                  <input type="number" step="any" required value={fuelForm.cost} onChange={(e) => setFuelForm({ ...fuelForm, cost: e.target.value })} className={inputCls} style={inputStyle} placeholder="0" />
                 </div>
               </div>
               <div>
-                <label className={labelCls}>Date</label>
-                <input type="date" required value={fuelForm.date} onChange={(e) => setFuelForm({ ...fuelForm, date: e.target.value })} className={inputCls} />
+                <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Date</label>
+                <input type="date" required value={fuelForm.date} onChange={(e) => setFuelForm({ ...fuelForm, date: e.target.value })} className={inputCls} style={inputStyle} />
               </div>
               <div className="pt-2">
-                <button type="submit" disabled={fuelSubmitting} className="w-full px-4 py-2 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 rounded-md transition-colors disabled:opacity-50">
-                  {fuelSubmitting ? "Saving..." : "Submit Fuel Log"}
+                <button
+                  type="submit"
+                  disabled={fuelSubmitting}
+                  className="w-full px-4 py-2 text-sm font-display font-semibold tracking-wide transition-opacity hover:opacity-90 disabled:opacity-50"
+                  style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
+                >
+                  {fuelSubmitting ? "SAVING…" : "SUBMIT FUEL LOG"}
                 </button>
               </div>
             </form>
           </div>
 
           {/* Expense Form */}
-          <div className="bg-white dark:bg-gray-900 p-4 rounded-md border border-gray-200 dark:border-gray-800 shadow-sm">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Log Expense</h2>
+          <div className="hq-panel p-4">
+            <h2 className="font-display font-semibold text-sm uppercase tracking-wider mb-4" style={{ color: "var(--hq-text)" }}>
+              Log Expense
+            </h2>
             <form onSubmit={handleExpenseSubmit} className="space-y-3">
-              {expenseError && <div className="text-sm text-red-500 border border-red-500/40 bg-red-500/10 rounded-md px-3 py-2">{expenseError}</div>}
+              {expenseError && (
+                <div className="text-sm px-3 py-2 border font-mono-hq" style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}>
+                  {expenseError}
+                </div>
+              )}
               <div>
-                <label className={labelCls}>Vehicle</label>
-                <select required value={expenseForm.vehicle_id} onChange={(e) => setExpenseForm({ ...expenseForm, vehicle_id: e.target.value })} className={inputCls}>
-                  <option value="" className="text-gray-400">-- Choose Vehicle --</option>
+                <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Vehicle</label>
+                <select required value={expenseForm.vehicle_id} onChange={(e) => setExpenseForm({ ...expenseForm, vehicle_id: e.target.value })} className={inputCls} style={inputStyle}>
+                  <option value="">-- Choose Vehicle --</option>
                   {activeVehicles.map((v) => (
-                    <option key={v.id} value={v.id} className="bg-white dark:bg-gray-900">{v.name} ({v.reg_number})</option>
+                    <option key={v.id} value={v.id}>{v.name} ({v.reg_number})</option>
                   ))}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className={labelCls}>Type</label>
-                  <select required value={expenseForm.type} onChange={(e) => setExpenseForm({ ...expenseForm, type: e.target.value })} className={inputCls}>
-                    <option value="toll" className="bg-white dark:bg-gray-900">Toll</option>
-                    <option value="other" className="bg-white dark:bg-gray-900">Other</option>
+                  <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Type</label>
+                  <select required value={expenseForm.type} onChange={(e) => setExpenseForm({ ...expenseForm, type: e.target.value })} className={inputCls} style={inputStyle}>
+                    <option value="toll">Toll</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
                 <div>
-                  <label className={labelCls}>Amount (₹)</label>
-                  <input type="number" step="any" required value={expenseForm.amount} onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })} className={inputCls} placeholder="0" />
+                  <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Amount (₹)</label>
+                  <input type="number" step="any" required value={expenseForm.amount} onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })} className={inputCls} style={inputStyle} placeholder="0" />
                 </div>
               </div>
               <div>
-                <label className={labelCls}>Date</label>
-                <input type="date" required value={expenseForm.date} onChange={(e) => setExpenseForm({ ...expenseForm, date: e.target.value })} className={inputCls} />
+                <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Date</label>
+                <input type="date" required value={expenseForm.date} onChange={(e) => setExpenseForm({ ...expenseForm, date: e.target.value })} className={inputCls} style={inputStyle} />
               </div>
               <div className="pt-2">
-                <button type="submit" disabled={expenseSubmitting} className="w-full px-4 py-2 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 rounded-md transition-colors disabled:opacity-50">
-                  {expenseSubmitting ? "Saving..." : "Submit Expense Log"}
+                <button
+                  type="submit"
+                  disabled={expenseSubmitting}
+                  className="w-full px-4 py-2 text-sm font-display font-semibold tracking-wide transition-opacity hover:opacity-90 disabled:opacity-50"
+                  style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
+                >
+                  {expenseSubmitting ? "SAVING…" : "SUBMIT EXPENSE LOG"}
                 </button>
               </div>
             </form>
@@ -236,21 +259,24 @@ export default function FuelExpenses() {
         {/* Fuel Logs Table */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Fuel History</h2>
+            <h2 className="font-display font-semibold text-sm uppercase tracking-wider" style={{ color: "var(--hq-text)" }}>
+              Fuel History
+            </h2>
             <select
               value={fuelVehicleFilter}
               onChange={(e) => setFuelVehicleFilter(e.target.value)}
-              className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="hq-glow text-sm px-3 py-1.5 border outline-none font-mono-hq"
+              style={inputStyle}
             >
               <option value="All">All Vehicles</option>
               {vehicles.map((v) => (
-                <option key={v.id} value={v.id} className="bg-white dark:bg-gray-900">{v.name} ({v.reg_number})</option>
+                <option key={v.id} value={v.id}>{v.name} ({v.reg_number})</option>
               ))}
             </select>
           </div>
-          <div className="border border-gray-200 dark:border-gray-800 rounded-md bg-white dark:bg-gray-900 overflow-hidden shadow-sm">
+          <div className="hq-panel overflow-hidden">
             {loading ? (
-              <div className="p-4 text-center text-sm text-gray-400">Loading...</div>
+              <div className="p-4 text-center text-sm font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>Loading…</div>
             ) : (
               <DataTable columns={fuelColumns} rows={filteredFuelLogs} />
             )}
@@ -260,21 +286,24 @@ export default function FuelExpenses() {
         {/* Expenses Table */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Expense History</h2>
+            <h2 className="font-display font-semibold text-sm uppercase tracking-wider" style={{ color: "var(--hq-text)" }}>
+              Expense History
+            </h2>
             <select
               value={expenseVehicleFilter}
               onChange={(e) => setExpenseVehicleFilter(e.target.value)}
-              className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="hq-glow text-sm px-3 py-1.5 border outline-none font-mono-hq"
+              style={inputStyle}
             >
               <option value="All">All Vehicles</option>
               {vehicles.map((v) => (
-                <option key={v.id} value={v.id} className="bg-white dark:bg-gray-900">{v.name} ({v.reg_number})</option>
+                <option key={v.id} value={v.id}>{v.name} ({v.reg_number})</option>
               ))}
             </select>
           </div>
-          <div className="border border-gray-200 dark:border-gray-800 rounded-md bg-white dark:bg-gray-900 overflow-hidden shadow-sm">
+          <div className="hq-panel overflow-hidden">
             {loading ? (
-              <div className="p-4 text-center text-sm text-gray-400">Loading...</div>
+              <div className="p-4 text-center text-sm font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>Loading…</div>
             ) : (
               <DataTable columns={expenseColumns} rows={filteredExpenses} />
             )}

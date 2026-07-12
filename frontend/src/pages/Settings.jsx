@@ -52,7 +52,7 @@ export default function Settings() {
       roleName: "Dispatcher",
       roleKey: "driver",
       fleet: "view",
-      drivers: "—",
+      drivers: "view",
       trips: "✓",
       fuelExp: "✓",
       analytics: "view",

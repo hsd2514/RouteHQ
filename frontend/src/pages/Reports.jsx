@@ -57,33 +57,33 @@ export default function Reports() {
       {/* Title Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-display font-semibold text-gray-900 dark:text-gray-100">
-            Reports & Analytics
+          <h1 className="font-display font-bold text-xl" style={{ color: "var(--hq-text)" }}>
+            Reports &amp; Analytics
           </h1>
-          <p className="text-sm font-mono-hq text-gray-500 dark:text-gray-400" style={{ color: "var(--hq-text-dim)" }}>
+          <p className="text-sm mt-0.5" style={{ color: "var(--hq-text-dim)" }}>
             Overview of vehicle costs, trips, and performance.
           </p>
         </div>
         <button
           onClick={handleDownloadCSV}
-          className="px-4 py-2 text-sm font-medium text-white transition-colors shadow-sm self-end rounded-md hover:opacity-90"
-          style={{ backgroundColor: "var(--hq-amber)" }}
+          className="px-4 py-2 text-sm font-display font-semibold tracking-wide transition-opacity hover:opacity-90 self-end"
+          style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
         >
-          Download CSV
+          DOWNLOAD CSV
         </button>
       </div>
 
       {/* Main Grid/Table */}
       {loading ? (
-        <div className="p-4 text-center font-mono-hq text-sm text-gray-500 dark:text-gray-400">
-          Loading report data...
+        <div className="p-4 text-center text-sm font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>
+          Loading report data…
         </div>
       ) : error ? (
-        <div className="p-4 text-red-500 border border-red-500/40 bg-red-500/10 rounded-md font-mono-hq text-sm">
+        <div className="text-sm px-3 py-2 border font-mono-hq" style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}>
           {error}
         </div>
       ) : (
-        <div className="hq-panel overflow-hidden shadow-sm font-mono-hq text-sm">
+        <div className="hq-panel overflow-hidden">
           <DataTable columns={columns} rows={data} />
         </div>
       )}
