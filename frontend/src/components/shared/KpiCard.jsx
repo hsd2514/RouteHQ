@@ -1,20 +1,25 @@
 const ACCENTS = {
-  blue: "border-blue-500",
-  green: "border-green-500",
-  orange: "border-orange-500",
-  red: "border-red-500",
-  gray: "border-gray-500",
+  blue: "#3aa0ff",
+  green: "#22c55e",
+  orange: "#ff9500",
+  red: "#ff4757",
+  gray: "#8a8d92",
 };
 
 export default function KpiCard({ label, value, accent = "gray" }) {
+  const color = ACCENTS[accent] || ACCENTS.gray;
   return (
     <div
-      className={`border-l-4 ${ACCENTS[accent]} border border-gray-200 dark:border-gray-800 rounded-md p-3 bg-white dark:bg-gray-900`}
+      className="hq-panel px-4 py-3"
+      style={{ borderLeft: `3px solid ${color}` }}
     >
-      <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <div
+        className="text-[10px] uppercase tracking-[0.14em] font-mono-hq"
+        style={{ color: "var(--hq-text-dim)" }}
+      >
         {label}
       </div>
-      <div className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mt-1">
+      <div className="font-display text-3xl font-bold mt-1 font-mono-hq" style={{ color: "var(--hq-text)" }}>
         {value}
       </div>
     </div>

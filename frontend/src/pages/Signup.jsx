@@ -9,6 +9,10 @@ const ROLES = [
   { value: "financial_analyst", label: "Financial Analyst" },
 ];
 
+const fieldLabelCls = "text-[10px] uppercase tracking-[0.12em] font-mono-hq";
+const fieldCls = "hq-glow w-full mt-1.5 px-3 py-2.5 text-sm border outline-none font-mono-hq";
+const fieldStyle = { background: "var(--hq-bg)", borderColor: "var(--hq-border)", color: "var(--hq-text)" };
+
 export default function Signup() {
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -31,75 +35,67 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
-      <div className="w-full max-w-sm border border-gray-200 dark:border-gray-800 rounded-lg p-6 bg-white dark:bg-gray-900">
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+    <div className="min-h-screen dark flex items-center justify-center p-6" style={{ background: "var(--hq-bg)" }}>
+      <div className="hq-panel hq-rise w-full max-w-sm p-7">
+        <div className="flex items-center gap-2.5 mb-6">
+          <span
+            className="w-8 h-8 flex items-center justify-center font-display font-bold"
+            style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
+          >
+            T
+          </span>
+          <span className="font-display font-bold text-lg" style={{ color: "var(--hq-text)" }}>
+            TransitOps
+          </span>
+        </div>
+
+        <h1 className="font-display font-bold text-xl" style={{ color: "var(--hq-text)" }}>
           Create account
         </h1>
-        <p className="text-sm text-gray-500 mb-6">Join TransitOps</p>
+        <p className="text-sm mt-1 mb-6" style={{ color: "var(--hq-text-dim)" }}>
+          Join the operations platform
+        </p>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-xs uppercase text-gray-500">Name</label>
-            <input
-              required
-              value={form.name}
-              onChange={(e) => update("name", e.target.value)}
-              className="w-full mt-1 px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200"
-            />
+            <label className={fieldLabelCls} style={{ color: "var(--hq-text-dim)" }}>Name</label>
+            <input required value={form.name} onChange={(e) => update("name", e.target.value)} className={fieldCls} style={fieldStyle} />
           </div>
           <div>
-            <label className="text-xs uppercase text-gray-500">Email</label>
-            <input
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) => update("email", e.target.value)}
-              className="w-full mt-1 px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200"
-            />
+            <label className={fieldLabelCls} style={{ color: "var(--hq-text-dim)" }}>Email</label>
+            <input type="email" required value={form.email} onChange={(e) => update("email", e.target.value)} className={fieldCls} style={fieldStyle} />
           </div>
           <div>
-            <label className="text-xs uppercase text-gray-500">Password</label>
-            <input
-              type="password"
-              required
-              value={form.password}
-              onChange={(e) => update("password", e.target.value)}
-              className="w-full mt-1 px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200"
-            />
+            <label className={fieldLabelCls} style={{ color: "var(--hq-text-dim)" }}>Password</label>
+            <input type="password" required value={form.password} onChange={(e) => update("password", e.target.value)} className={fieldCls} style={fieldStyle} />
           </div>
           <div>
-            <label className="text-xs uppercase text-gray-500">Role</label>
-            <select
-              value={form.role}
-              onChange={(e) => update("role", e.target.value)}
-              className="w-full mt-1 px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200"
-            >
+            <label className={fieldLabelCls} style={{ color: "var(--hq-text-dim)" }}>Role</label>
+            <select value={form.role} onChange={(e) => update("role", e.target.value)} className={fieldCls} style={fieldStyle}>
               {ROLES.map((r) => (
-                <option key={r.value} value={r.value}>
-                  {r.label}
-                </option>
+                <option key={r.value} value={r.value}>{r.label}</option>
               ))}
             </select>
           </div>
 
           {error && (
-            <div className="text-sm text-red-500 border border-red-500/40 bg-red-500/10 rounded-md px-3 py-2">
-              {error}
+            <div className="text-sm px-3 py-2 border font-mono-hq" style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}>
+              ⚠ {error}
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full py-2 rounded-md bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium"
+            className="w-full py-2.5 font-display font-semibold text-sm tracking-wide transition-opacity hover:opacity-90"
+            style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
           >
-            Create Account
+            CREATE ACCOUNT
           </button>
         </form>
 
-        <p className="text-sm text-gray-500 mt-4 text-center">
+        <p className="text-sm mt-5 text-center" style={{ color: "var(--hq-text-dim)" }}>
           Already have an account?{" "}
-          <Link to="/login" className="text-orange-500">
+          <Link to="/login" style={{ color: "var(--hq-amber)" }}>
             Sign in
           </Link>
         </p>

@@ -5,5 +5,9 @@
 //   (window.open, or fetch as blob + create an <a download> link — it's a StreamingResponse
 //   with Content-Disposition attachment, so a simple window.location/window.open works too)
 export default function Reports() {
-  return <div className="p-4 text-gray-500">Reports page — TODO</div>;
+  return (
+    <div className="p-5 font-mono-hq text-xs uppercase tracking-widest" style={{ color: "var(--hq-text-dim)" }}>
+      Reports page — TODO
+    </div>
+  );
 }

@@ -1,7 +1,115 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+  --font-display: "Oxanium", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --hq-bg: #f4f2ec;
+  --hq-panel: #ffffff;
+  --hq-panel-2: #ebe8df;
+  --hq-border: #d8d3c4;
+  --hq-text: #1c1a15;
+  --hq-text-dim: #6b6759;
+  --hq-amber: #c8580a;
+  --hq-amber-bright: #e8720f;
+  --hq-grid-line: rgba(28, 26, 21, 0.05);
+}
+
+.dark {
+  --hq-bg: #0a0b0d;
+  --hq-panel: #121417;
+  --hq-panel-2: #191c20;
+  --hq-border: #2a2e34;
+  --hq-text: #e8e6df;
+  --hq-text-dim: #8a8d92;
+  --hq-amber: #ff9500;
+  --hq-amber-bright: #ffb020;
+  --hq-grid-line: rgba(255, 255, 255, 0.035);
+}
+
 body {
   margin: 0;
+  background: var(--hq-bg);
+  color: var(--hq-text);
+  font-family: var(--font-body);
+  background-image:
+    linear-gradient(var(--hq-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hq-grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ── Typography ────────────────────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+.font-mono-hq {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── HUD panel: bordered surface with corner brackets ─────────────────── */
+.hq-panel {
+  position: relative;
+  background: var(--hq-panel);
+  border: 1px solid var(--hq-border);
+  border-radius: 2px;
+}
+.hq-panel::before,
+.hq-panel::after,
+.hq-corners::before,
+.hq-corners::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.hq-panel::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--hq-amber);
+  border-left: 2px solid var(--hq-amber);
+}
+.hq-panel::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--hq-amber);
+  border-right: 2px solid var(--hq-amber);
+}
+
+/* ── Amber scan glow used on focused/active elements ───────────────────── */
+.hq-glow:focus-within {
+  box-shadow: 0 0 0 1px var(--hq-amber), 0 0 12px -2px var(--hq-amber);
+}
+
+/* ── Pulsing live indicator dot ─────────────────────────────────────────── */
+@keyframes hq-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+  50% { opacity: 0.55; box-shadow: 0 0 0 3px transparent; }
+}
+.hq-live-dot {
+  animation: hq-pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Staggered entrance ─────────────────────────────────────────────────── */
+@keyframes hq-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hq-rise {
+  animation: hq-rise 0.4s ease-out both;
+}
+
+/* ── Scrollbar (webkit) tuned to theme ──────────────────────────────────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--hq-border);
+  border-radius: 0;
 }

@@ -1,10 +1,14 @@
 export default function DataTable({ columns, rows, onRowClick }) {
   return (
-    <table className="w-full text-sm text-left">
+    <table className="w-full text-sm text-left border-collapse">
       <thead>
-        <tr className="text-xs uppercase text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800">
+        <tr style={{ borderBottom: "1px solid var(--hq-border)" }}>
           {columns.map((col) => (
-            <th key={col.key} className="py-2 px-3 font-medium">
+            <th
+              key={col.key}
+              className="py-2.5 px-3 font-mono-hq text-[10px] uppercase tracking-[0.12em] font-medium"
+              style={{ color: "var(--hq-text-dim)" }}
+            >
               {col.header}
             </th>
           ))}
@@ -15,12 +19,11 @@ export default function DataTable({ columns, rows, onRowClick }) {
           <tr
             key={row.id ?? i}
             onClick={() => onRowClick?.(row)}
-            className={`border-b border-gray-100 dark:border-gray-900 ${
-              onRowClick ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900" : ""
-            }`}
+            className={onRowClick ? "cursor-pointer transition-colors hover:bg-(--hq-panel-2)" : ""}
+            style={{ borderBottom: "1px solid var(--hq-border)" }}
           >
             {columns.map((col) => (
-              <td key={col.key} className="py-2 px-3 text-gray-700 dark:text-gray-300">
+              <td key={col.key} className="py-2.5 px-3 font-mono-hq text-[13px]" style={{ color: "var(--hq-text)" }}>
                 {col.render ? col.render(row) : row[col.key]}
               </td>
             ))}
@@ -28,8 +31,8 @@ export default function DataTable({ columns, rows, onRowClick }) {
         ))}
         {rows.length === 0 && (
           <tr>
-            <td colSpan={columns.length} className="py-6 text-center text-gray-400">
-              No data
+            <td colSpan={columns.length} className="py-8 text-center text-xs font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>
+              NO RECORDS
             </td>
           </tr>
         )}

@@ -5,5 +5,9 @@
 // - Two tables below: GET /fuel-logs and GET /expenses, each filterable by vehicle
 //   (use ?vehicle_id= query param, or filter client-side)
 export default function FuelExpenses() {
-  return <div className="p-4 text-gray-500">Fuel & Expenses page — TODO</div>;
+  return (
+    <div className="p-5 font-mono-hq text-xs uppercase tracking-widest" style={{ color: "var(--hq-text-dim)" }}>
+      Fuel &amp; Expenses page — TODO
+    </div>
+  );
 }

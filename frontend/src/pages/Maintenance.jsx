@@ -5,6 +5,10 @@ import StatusBadge from "../components/shared/StatusBadge";
 import Modal from "../components/shared/Modal";
 import { useAuth } from "../context/AuthContext";
 
+const labelCls = "block text-[10px] uppercase tracking-[0.12em] font-mono-hq mb-1";
+const inputCls = "hq-glow w-full px-3 py-2 text-sm border outline-none font-mono-hq";
+const inputStyle = { background: "var(--hq-bg)", borderColor: "var(--hq-border)", color: "var(--hq-text)" };
+
 export default function Maintenance() {
   const { user } = useAuth();
   const [vehicles, setVehicles] = useState([]);
@@ -12,7 +16,6 @@ export default function Maintenance() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Create Form State
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [addLogError, setAddLogError] = useState("");
   const [newLog, setNewLog] = useState({
@@ -45,11 +48,7 @@ export default function Maintenance() {
   const handleCloseAddModal = () => {
     setIsAddModalOpen(false);
     setAddLogError("");
-    setNewLog({
-      vehicle_id: "",
-      issue_description: "",
-      cost: "",
-    });
+    setNewLog({ vehicle_id: "", issue_description: "", cost: "" });
   };
 
   const handleCreateMaintenance = async (e) => {
@@ -94,10 +93,7 @@ export default function Maintenance() {
         return vehicle ? `${vehicle.name} (${vehicle.reg_number})` : `Vehicle ID: ${row.vehicle_id}`;
       },
     },
-    {
-      key: "issue_description",
-      header: "Issue/Service",
-    },
+    { key: "issue_description", header: "Issue/Service" },
     {
       key: "cost",
       header: "Cost",
@@ -118,7 +114,8 @@ export default function Maintenance() {
         row.status === "active" ? (
           <button
             onClick={() => handleCloseMaintenance(row.id)}
-            className="px-2 py-1 text-xs font-medium text-white bg-red-500 hover:bg-red-600 rounded-md transition-colors"
+            className="text-[11px] uppercase tracking-wide px-2.5 py-1 border font-mono-hq font-medium transition-colors"
+            style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}
           >
             Close
           </button>
@@ -126,135 +123,113 @@ export default function Maintenance() {
     });
   }
 
-  // Filter out retired vehicles for dropdown log options
   const activeVehiclesForDropdown = vehicles.filter((v) => v.status !== "retired");
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-5 space-y-4">
       {/* Title Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <h1 className="font-display font-bold text-xl" style={{ color: "var(--hq-text)" }}>
             Maintenance Registry
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm mt-0.5" style={{ color: "var(--hq-text-dim)" }}>
             Log new maintenance records and track fleet services.
           </p>
         </div>
         {user?.role === "fleet_manager" && (
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 rounded-md transition-colors shadow-sm self-end"
+            className="px-4 py-2 text-sm font-display font-semibold tracking-wide transition-opacity hover:opacity-90 self-end"
+            style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
           >
-            + Log Maintenance
+            + LOG MAINTENANCE
           </button>
         )}
       </div>
 
       {/* Main Grid/Table */}
       {loading ? (
-        <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-          Loading maintenance records...
+        <div className="p-4 text-center text-sm font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>
+          Loading maintenance records…
         </div>
       ) : error ? (
-        <div className="p-4 text-red-500 border border-red-500/40 bg-red-500/10 rounded-md">
+        <div className="text-sm px-3 py-2 border font-mono-hq" style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}>
           {error}
         </div>
       ) : (
-        <div className="border border-gray-200 dark:border-gray-800 rounded-md bg-white dark:bg-gray-900 overflow-hidden shadow-sm">
+        <div className="hq-panel overflow-hidden">
           <DataTable columns={columns} rows={maintenanceLogs} />
         </div>
       )}
 
       {/* Add Maintenance Modal */}
-      <Modal
-        open={isAddModalOpen}
-        onClose={handleCloseAddModal}
-        title="Record Maintenance Service"
-      >
+      <Modal open={isAddModalOpen} onClose={handleCloseAddModal} title="Record Maintenance Service">
         <form onSubmit={handleCreateMaintenance} className="space-y-4">
           {addLogError && (
-            <div className="text-sm text-red-500 border border-red-500/40 bg-red-500/10 rounded-md px-3 py-2">
+            <div className="text-sm px-3 py-2 border font-mono-hq" style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}>
               {addLogError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
-              Select Vehicle
-            </label>
+            <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Select Vehicle</label>
             <select
               required
               value={newLog.vehicle_id}
-              onChange={(e) =>
-                setNewLog((prev) => ({ ...prev, vehicle_id: e.target.value }))
-              }
-              className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              onChange={(e) => setNewLog((prev) => ({ ...prev, vehicle_id: e.target.value }))}
+              className={inputCls}
+              style={inputStyle}
             >
-              <option value="" className="text-gray-400">
-                -- Choose Vehicle --
-              </option>
+              <option value="">-- Choose Vehicle --</option>
               {activeVehiclesForDropdown.map((v) => (
-                <option
-                  key={v.id}
-                  value={v.id}
-                  className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
-                >
-                  {v.name} ({v.reg_number}) - {v.status}
-                </option>
+                <option key={v.id} value={v.id}>{v.name} ({v.reg_number}) - {v.status}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
-              Issue/Service Description
-            </label>
+            <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Issue/Service Description</label>
             <textarea
               required
               rows={3}
               value={newLog.issue_description}
-              onChange={(e) =>
-                setNewLog((prev) => ({
-                  ...prev,
-                  issue_description: e.target.value,
-                }))
-              }
-              className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500 placeholder-gray-400"
-              placeholder="Describe the maintenance issue, parts replaced, or service details..."
+              onChange={(e) => setNewLog((prev) => ({ ...prev, issue_description: e.target.value }))}
+              className={inputCls}
+              style={inputStyle}
+              placeholder="Describe the maintenance issue, parts replaced, or service details…"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
-              Service Cost (₹)
-            </label>
+            <label className={labelCls} style={{ color: "var(--hq-text-dim)" }}>Service Cost (₹)</label>
             <input
               type="number"
               step="any"
               required
               value={newLog.cost}
-              onChange={(e) =>
-                setNewLog((prev) => ({ ...prev, cost: e.target.value }))
-              }
-              className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              onChange={(e) => setNewLog((prev) => ({ ...prev, cost: e.target.value }))}
+              className={inputCls}
+              style={inputStyle}
               placeholder="0"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex justify-end gap-2 pt-3" style={{ borderTop: "1px solid var(--hq-border)" }}>
             <button
               type="button"
               onClick={handleCloseAddModal}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="px-4 py-2 text-sm font-medium border"
+              style={{ borderColor: "var(--hq-border)", color: "var(--hq-text-dim)" }}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 rounded-md transition-colors"
+              className="px-4 py-2 text-sm font-display font-semibold tracking-wide transition-opacity hover:opacity-90"
+              style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
             >
-              Record Log
+              RECORD LOG
             </button>
           </div>
         </form>
@@ -262,4 +237,3 @@ export default function Maintenance() {
     </div>
   );
 }
-

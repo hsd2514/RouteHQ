@@ -10,16 +10,13 @@ function Toast({ message, onClose }) {
   return (
     <div
       id="trip-error-toast"
-      className="flex items-start gap-3 bg-red-500/10 border border-red-500/40 text-red-500 rounded-md px-4 py-3 text-sm"
+      className="hq-rise flex items-start gap-3 px-4 py-3 text-sm border font-mono-hq"
+      style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}
       role="alert"
     >
       <span className="mt-0.5 shrink-0">⚠</span>
       <span className="flex-1 break-words">{message}</span>
-      <button
-        onClick={onClose}
-        className="ml-2 shrink-0 text-red-400 hover:text-red-600"
-        aria-label="Dismiss"
-      >
+      <button onClick={onClose} className="ml-2 shrink-0 hover:opacity-70" aria-label="Dismiss">
         ✕
       </button>
     </div>
@@ -29,24 +26,20 @@ function Toast({ message, onClose }) {
 // ── Lifecycle stepper (visual only) ──────────────────────────────────────────
 const LIFECYCLE = ["draft", "dispatched", "completed", "cancelled"];
 const STEP_COLORS = {
-  draft: "bg-green-500",
-  dispatched: "bg-blue-500",
-  completed: "bg-gray-400",
-  cancelled: "bg-red-400",
+  draft: "#8a8d92",
+  dispatched: "#3aa0ff",
+  completed: "#22c55e",
+  cancelled: "#ff4757",
 };
 
 function LifecycleBar() {
   return (
-    <div className="flex items-center gap-1 mb-4">
+    <div className="flex items-center gap-1 mb-4 flex-wrap">
       {LIFECYCLE.map((step, i) => (
         <div key={step} className="flex items-center gap-1">
-          <div
-            className={`w-3 h-3 rounded-full ${STEP_COLORS[step]} shrink-0`}
-          />
-          <span className="text-xs text-gray-500 capitalize">{step}</span>
-          {i < LIFECYCLE.length - 1 && (
-            <span className="text-gray-600 mx-1">→</span>
-          )}
+          <div className="w-2 h-2 shrink-0" style={{ background: STEP_COLORS[step] }} />
+          <span className="text-[10px] font-mono-hq uppercase" style={{ color: "var(--hq-text-dim)" }}>{step}</span>
+          {i < LIFECYCLE.length - 1 && <span className="mx-1" style={{ color: "var(--hq-border)" }}>→</span>}
         </div>
       ))}
     </div>
@@ -67,8 +60,7 @@ function CreateTripForm({ vehicles, drivers, onCreated, onError }) {
   const [form, setForm] = useState(EMPTY_TRIP);
   const [submitting, setSubmitting] = useState(false);
 
-  const set = (field) => (e) =>
-    setForm((f) => ({ ...f, [field]: e.target.value }));
+  const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -94,39 +86,17 @@ function CreateTripForm({ vehicles, drivers, onCreated, onError }) {
     <form onSubmit={handleSubmit} className="space-y-3">
       <div>
         <label className={labelCls}>Source</label>
-        <input
-          id="trip-source"
-          required
-          type="text"
-          placeholder="e.g. Gandhinagar Depot"
-          value={form.source}
-          onChange={set("source")}
-          className={inputCls}
-        />
+        <input id="trip-source" required type="text" placeholder="e.g. Gandhinagar Depot" value={form.source} onChange={set("source")} className={inputCls} style={inputStyle} />
       </div>
 
       <div>
         <label className={labelCls}>Destination</label>
-        <input
-          id="trip-destination"
-          required
-          type="text"
-          placeholder="e.g. Ahmedabad Hub"
-          value={form.destination}
-          onChange={set("destination")}
-          className={inputCls}
-        />
+        <input id="trip-destination" required type="text" placeholder="e.g. Ahmedabad Hub" value={form.destination} onChange={set("destination")} className={inputCls} style={inputStyle} />
       </div>
 
       <div>
         <label className={labelCls}>Vehicle (available only)</label>
-        <select
-          id="trip-vehicle"
-          required
-          value={form.vehicle_id}
-          onChange={set("vehicle_id")}
-          className={inputCls}
-        >
+        <select id="trip-vehicle" required value={form.vehicle_id} onChange={set("vehicle_id")} className={inputCls} style={inputStyle}>
           <option value="">— select vehicle —</option>
           {vehicles.map((v) => (
             <option key={v.id} value={v.id}>
@@ -138,18 +108,10 @@ function CreateTripForm({ vehicles, drivers, onCreated, onError }) {
 
       <div>
         <label className={labelCls}>Driver (available only)</label>
-        <select
-          id="trip-driver"
-          required
-          value={form.driver_id}
-          onChange={set("driver_id")}
-          className={inputCls}
-        >
+        <select id="trip-driver" required value={form.driver_id} onChange={set("driver_id")} className={inputCls} style={inputStyle}>
           <option value="">— select driver —</option>
           {drivers.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.name} — {d.license_category}
-            </option>
+            <option key={d.id} value={d.id}>{d.name} — {d.license_category}</option>
           ))}
         </select>
       </div>
@@ -157,31 +119,11 @@ function CreateTripForm({ vehicles, drivers, onCreated, onError }) {
       <div className="grid grid-cols-2 gap-2">
         <div>
           <label className={labelCls}>Cargo Weight (kg)</label>
-          <input
-            id="trip-cargo-weight"
-            required
-            type="number"
-            min="0"
-            step="0.1"
-            placeholder="700"
-            value={form.cargo_weight}
-            onChange={set("cargo_weight")}
-            className={inputCls}
-          />
+          <input id="trip-cargo-weight" required type="number" min="0" step="0.1" placeholder="700" value={form.cargo_weight} onChange={set("cargo_weight")} className={inputCls} style={inputStyle} />
         </div>
         <div>
           <label className={labelCls}>Planned Distance (km)</label>
-          <input
-            id="trip-planned-distance"
-            required
-            type="number"
-            min="0"
-            step="0.1"
-            placeholder="38"
-            value={form.planned_distance}
-            onChange={set("planned_distance")}
-            className={inputCls}
-          />
+          <input id="trip-planned-distance" required type="number" min="0" step="0.1" placeholder="38" value={form.planned_distance} onChange={set("planned_distance")} className={inputCls} style={inputStyle} />
         </div>
       </div>
 
@@ -190,14 +132,16 @@ function CreateTripForm({ vehicles, drivers, onCreated, onError }) {
           id="trip-create-btn"
           type="submit"
           disabled={submitting}
-          className="flex-1 text-sm bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-4 py-2 rounded-md transition-colors"
+          className="flex-1 text-sm font-display font-semibold tracking-wide px-4 py-2 transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
         >
-          {submitting ? "Creating…" : "Create Trip"}
+          {submitting ? "Creating…" : "CREATE TRIP"}
         </button>
         <button
           type="button"
           onClick={() => setForm(EMPTY_TRIP)}
-          className="text-sm px-4 py-2 rounded-md border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="text-sm px-4 py-2 border transition-colors"
+          style={{ borderColor: "var(--hq-border)", color: "var(--hq-text-dim)" }}
         >
           Clear
         </button>
@@ -217,18 +161,15 @@ function CompleteModal({ trip, open, onClose, onCompleted, onError }) {
   const [form, setForm] = useState(EMPTY_COMPLETE);
   const [submitting, setSubmitting] = useState(false);
 
-  // Reset when modal opens for a new trip
   const prevTripId = useRef(null);
   if (open && trip && trip.id !== prevTripId.current) {
     prevTripId.current = trip.id;
-    // don't call setState during render — use effect below
   }
   useEffect(() => {
     if (open) setForm(EMPTY_COMPLETE);
   }, [open, trip?.id]);
 
-  const set = (field) => (e) =>
-    setForm((f) => ({ ...f, [field]: e.target.value }));
+  const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -251,68 +192,35 @@ function CompleteModal({ trip, open, onClose, onCompleted, onError }) {
   return (
     <Modal open={open} onClose={onClose} title="Complete Trip">
       {trip && (
-        <p className="text-xs text-gray-500 mb-3">
+        <p className="text-xs font-mono-hq mb-3" style={{ color: "var(--hq-text-dim)" }}>
           {trip.source} → {trip.destination}
         </p>
       )}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
           <label className={labelCls}>Actual Distance (km)</label>
-          <input
-            id="complete-actual-distance"
-            required
-            type="number"
-            min="0"
-            step="0.1"
-            placeholder="e.g. 42"
-            value={form.actual_distance}
-            onChange={set("actual_distance")}
-            className={inputCls}
-          />
+          <input id="complete-actual-distance" required type="number" min="0" step="0.1" placeholder="e.g. 42" value={form.actual_distance} onChange={set("actual_distance")} className={inputCls} style={inputStyle} />
         </div>
         <div>
           <label className={labelCls}>Fuel Consumed (L)</label>
-          <input
-            id="complete-fuel-consumed"
-            required
-            type="number"
-            min="0"
-            step="0.1"
-            placeholder="e.g. 5.2"
-            value={form.fuel_consumed}
-            onChange={set("fuel_consumed")}
-            className={inputCls}
-          />
+          <input id="complete-fuel-consumed" required type="number" min="0" step="0.1" placeholder="e.g. 5.2" value={form.fuel_consumed} onChange={set("fuel_consumed")} className={inputCls} style={inputStyle} />
         </div>
         <div>
           <label className={labelCls}>Final Odometer (km)</label>
-          <input
-            id="complete-final-odometer"
-            required
-            type="number"
-            min="0"
-            step="0.1"
-            placeholder="e.g. 12542"
-            value={form.final_odometer}
-            onChange={set("final_odometer")}
-            className={inputCls}
-          />
+          <input id="complete-final-odometer" required type="number" min="0" step="0.1" placeholder="e.g. 12542" value={form.final_odometer} onChange={set("final_odometer")} className={inputCls} style={inputStyle} />
         </div>
         <div className="flex justify-end gap-2 pt-1">
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-sm px-4 py-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          >
+          <button type="button" onClick={onClose} className="text-sm px-4 py-1.5 border transition-colors" style={{ borderColor: "var(--hq-border)", color: "var(--hq-text-dim)" }}>
             Cancel
           </button>
           <button
             id="complete-submit-btn"
             type="submit"
             disabled={submitting}
-            className="text-sm px-4 py-1.5 rounded-md bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium transition-colors"
+            className="text-sm px-4 py-1.5 font-display font-semibold tracking-wide transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ background: "#22c55e", color: "#0a0b0d" }}
           >
-            {submitting ? "Saving…" : "Mark Complete"}
+            {submitting ? "Saving…" : "MARK COMPLETE"}
           </button>
         </div>
       </form>
@@ -325,50 +233,34 @@ export default function Trips() {
   const [trips, setTrips] = useState([]);
   const [availVehicles, setAvailVehicles] = useState([]);
   const [availDrivers, setAvailDrivers] = useState([]);
-  // Full (unfiltered) lists, used only to resolve display names for trips
-  // whose vehicle/driver is no longer "available" (e.g. dispatched/on_trip).
   const [allVehicles, setAllVehicles] = useState([]);
   const [allDrivers, setAllDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ── Lookup maps: id → object (rebuilt only when source arrays change) ───
-  const vehicleMap = useMemo(
-    () => Object.fromEntries(allVehicles.map((v) => [v.id, v])),
-    [allVehicles]
-  );
-  const driverMap = useMemo(
-    () => Object.fromEntries(allDrivers.map((d) => [d.id, d])),
-    [allDrivers]
-  );
+  const vehicleMap = useMemo(() => Object.fromEntries(allVehicles.map((v) => [v.id, v])), [allVehicles]);
+  const driverMap = useMemo(() => Object.fromEntries(allDrivers.map((d) => [d.id, d])), [allDrivers]);
 
-  // Toast error
   const [toast, setToast] = useState("");
   function showError(msg) {
     setToast(msg);
   }
 
-  // Complete modal
   const [completeTrip, setCompleteTrip] = useState(null);
-
-  // Per-row action loading
   const [actionId, setActionId] = useState(null);
 
-  // Search / status filter
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // ── Fetch all data ──────────────────────────────────────────────────────
   async function fetchAll() {
     setLoading(true);
     try {
-      const [tripsRes, vehiclesRes, driversRes, allVehiclesRes, allDriversRes] =
-        await Promise.all([
-          client.get("/trips"),
-          client.get("/vehicles?status=available"),
-          client.get("/drivers?assignable=true"),
-          client.get("/vehicles"),
-          client.get("/drivers"),
-        ]);
+      const [tripsRes, vehiclesRes, driversRes, allVehiclesRes, allDriversRes] = await Promise.all([
+        client.get("/trips"),
+        client.get("/vehicles?status=available"),
+        client.get("/drivers?assignable=true"),
+        client.get("/vehicles"),
+        client.get("/drivers"),
+      ]);
       setTrips(tripsRes.data);
       setAvailVehicles(vehiclesRes.data);
       setAvailDrivers(driversRes.data);
@@ -383,7 +275,6 @@ export default function Trips() {
     fetchAll();
   }, []);
 
-  // ── Actions ─────────────────────────────────────────────────────────────
   async function dispatch(trip) {
     setActionId(trip.id);
     try {
@@ -408,7 +299,6 @@ export default function Trips() {
     }
   }
 
-  // ── Client-side filter ──────────────────────────────────────────────────
   const filtered = trips.filter((t) => {
     const q = search.toLowerCase();
     const vehicle = vehicleMap[t.vehicle_id];
@@ -423,15 +313,14 @@ export default function Trips() {
     return matchSearch && matchStatus;
   });
 
-  // ── Table columns ────────────────────────────────────────────────────────
   const columns = [
     {
       key: "route",
       header: "Route",
       render: (row) => (
-        <span className="font-medium text-gray-800 dark:text-gray-200">
+        <span className="font-medium" style={{ color: "var(--hq-text)" }}>
           {row.source}
-          <span className="mx-1 text-gray-400">→</span>
+          <span className="mx-1" style={{ color: "var(--hq-text-dim)" }}>→</span>
           {row.destination}
         </span>
       ),
@@ -442,11 +331,9 @@ export default function Trips() {
       render: (row) => {
         const vehicle = vehicleMap[row.vehicle_id];
         return vehicle ? (
-          <span className="text-sm text-gray-600 dark:text-gray-300">
-            {vehicle.reg_number}
-          </span>
+          <span style={{ color: "var(--hq-text)" }}>{vehicle.reg_number}</span>
         ) : (
-          <span className="text-gray-400">—</span>
+          <span style={{ color: "var(--hq-text-dim)" }}>—</span>
         );
       },
     },
@@ -456,20 +343,16 @@ export default function Trips() {
       render: (row) => {
         const driver = driverMap[row.driver_id];
         return driver ? (
-          <span className="text-sm text-gray-600 dark:text-gray-300">
-            {driver.name}
-          </span>
+          <span style={{ color: "var(--hq-text)" }}>{driver.name}</span>
         ) : (
-          <span className="text-gray-400">—</span>
+          <span style={{ color: "var(--hq-text-dim)" }}>—</span>
         );
       },
     },
     {
       key: "cargo_weight",
       header: "Cargo (kg)",
-      render: (row) => (
-        <span className="tabular-nums text-sm">{row.cargo_weight ?? "—"}</span>
-      ),
+      render: (row) => <span>{row.cargo_weight ?? "—"}</span>,
     },
     {
       key: "status",
@@ -488,7 +371,8 @@ export default function Trips() {
                 id={`dispatch-btn-${row.id}`}
                 disabled={busy}
                 onClick={() => dispatch(row)}
-                className="text-xs px-2.5 py-1 rounded-md border border-blue-500/40 text-blue-500 bg-blue-500/10 hover:bg-blue-500/20 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-[11px] uppercase tracking-wide px-2.5 py-1 border font-mono-hq font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ color: "#3aa0ff", borderColor: "#3aa0ff55", background: "#3aa0ff14" }}
               >
                 {busy ? "…" : "Dispatch"}
               </button>
@@ -498,7 +382,8 @@ export default function Trips() {
                 id={`complete-btn-${row.id}`}
                 disabled={busy}
                 onClick={() => setCompleteTrip(row)}
-                className="text-xs px-2.5 py-1 rounded-md border border-green-500/40 text-green-500 bg-green-500/10 hover:bg-green-500/20 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-[11px] uppercase tracking-wide px-2.5 py-1 border font-mono-hq font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ color: "#22c55e", borderColor: "#22c55e55", background: "#22c55e14" }}
               >
                 Complete
               </button>
@@ -508,7 +393,8 @@ export default function Trips() {
                 id={`cancel-btn-${row.id}`}
                 disabled={busy}
                 onClick={() => cancel(row)}
-                className="text-xs px-2.5 py-1 rounded-md border border-red-500/40 text-red-500 bg-red-500/10 hover:bg-red-500/20 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-[11px] uppercase tracking-wide px-2.5 py-1 border font-mono-hq font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ color: "#ff4757", borderColor: "#ff475755", background: "#ff475714" }}
               >
                 {busy ? "…" : "Cancel"}
               </button>
@@ -519,61 +405,51 @@ export default function Trips() {
     },
   ];
 
-  // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="p-4 flex gap-4 h-full min-h-0">
+    <div className="p-5 flex gap-4 h-full min-h-0">
       {/* ── Left panel: Create Trip ── */}
       <div className="w-80 shrink-0 flex flex-col gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <h1 className="font-display font-bold text-xl" style={{ color: "var(--hq-text)" }}>
             Trip Dispatcher
           </h1>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs mt-0.5" style={{ color: "var(--hq-text-dim)" }}>
             Create and manage fleet trips.
           </p>
         </div>
 
-        <div className="border border-gray-200 dark:border-gray-800 rounded-md bg-white dark:bg-gray-900 p-4 space-y-3">
+        <div className="hq-panel p-4 space-y-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
+            <p className="text-[10px] font-mono-hq uppercase tracking-[0.14em] mb-2" style={{ color: "var(--hq-text-dim)" }}>
               Trip Lifecycle
             </p>
             <LifecycleBar />
           </div>
 
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <p className="text-[10px] font-mono-hq uppercase tracking-[0.14em]" style={{ color: "var(--hq-text-dim)" }}>
             Create Trip
           </p>
 
-          <CreateTripForm
-            vehicles={availVehicles}
-            drivers={availDrivers}
-            onCreated={fetchAll}
-            onError={showError}
-          />
+          <CreateTripForm vehicles={availVehicles} drivers={availDrivers} onCreated={fetchAll} onError={showError} />
         </div>
 
-        <p className="text-xs text-orange-500/80 leading-relaxed">
-          On Complete: odometer → fuel log → expenses → Vehicle &amp; Driver
-          Available.
+        <p className="text-xs leading-relaxed font-mono-hq" style={{ color: "var(--hq-amber)" }}>
+          On Complete: odometer → fuel log → expenses → Vehicle &amp; Driver Available.
         </p>
       </div>
 
       {/* ── Right panel: Live Board ── */}
       <div className="flex-1 flex flex-col gap-3 min-w-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+          <h2 className="text-sm font-display font-semibold uppercase tracking-wide" style={{ color: "var(--hq-text)" }}>
             Live Board
           </h2>
-          <span className="text-xs text-gray-400 ml-auto">
+          <span className="text-xs font-mono-hq ml-auto" style={{ color: "var(--hq-text-dim)" }}>
             {filtered.length} trip{filtered.length !== 1 ? "s" : ""}
           </span>
         </div>
 
-        {/* Toast */}
-        {toast && (
-          <Toast message={toast} onClose={() => setToast("")} />
-        )}
+        {toast && <Toast message={toast} onClose={() => setToast("")} />}
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2">
@@ -583,30 +459,26 @@ export default function Trips() {
             placeholder="Search route, vehicle, driver…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 min-w-[180px] text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-1.5 text-gray-800 dark:text-gray-200 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="hq-glow flex-1 min-w-[180px] text-sm px-3 py-1.5 border outline-none font-mono-hq"
+            style={{ background: "var(--hq-panel)", borderColor: "var(--hq-border)", color: "var(--hq-text)" }}
           />
           <select
             id="trip-status-filter"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-1.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="hq-glow text-sm px-3 py-1.5 border outline-none font-mono-hq"
+            style={{ background: "var(--hq-panel)", borderColor: "var(--hq-border)", color: "var(--hq-text)" }}
           >
-            {["all", "draft", "dispatched", "completed", "cancelled"].map(
-              (s) => (
-                <option key={s} value={s}>
-                  {s === "all"
-                    ? "All Statuses"
-                    : s[0].toUpperCase() + s.slice(1)}
-                </option>
-              )
-            )}
+            {["all", "draft", "dispatched", "completed", "cancelled"].map((s) => (
+              <option key={s} value={s}>{s === "all" ? "All Statuses" : s[0].toUpperCase() + s.slice(1)}</option>
+            ))}
           </select>
         </div>
 
         {/* Table */}
-        <div className="flex-1 border border-gray-200 dark:border-gray-800 rounded-md bg-white dark:bg-gray-900 overflow-auto">
+        <div className="hq-panel flex-1 overflow-auto">
           {loading ? (
-            <div className="py-12 text-center text-sm text-gray-400">
+            <div className="py-12 text-center text-sm font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>
               Loading trips…
             </div>
           ) : (
@@ -615,21 +487,12 @@ export default function Trips() {
         </div>
       </div>
 
-      {/* Complete-trip modal */}
-      <CompleteModal
-        trip={completeTrip}
-        open={!!completeTrip}
-        onClose={() => setCompleteTrip(null)}
-        onCompleted={fetchAll}
-        onError={showError}
-      />
+      <CompleteModal trip={completeTrip} open={!!completeTrip} onClose={() => setCompleteTrip(null)} onCompleted={fetchAll} onError={showError} />
     </div>
   );
 }
 
 // ── Shared style helpers ──────────────────────────────────────────────────────
-const labelCls =
-  "block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1";
-
-const inputCls =
-  "w-full text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-3 py-1.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500";
+const labelCls = "block text-[10px] uppercase tracking-[0.12em] font-mono-hq mb-1";
+const inputCls = "hq-glow w-full text-sm px-3 py-1.5 border outline-none font-mono-hq";
+const inputStyle = { background: "var(--hq-bg)", borderColor: "var(--hq-border)", color: "var(--hq-text)" };

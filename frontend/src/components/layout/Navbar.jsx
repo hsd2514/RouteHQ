@@ -12,7 +12,7 @@ const ROLE_LABELS = {
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [dark, setDark] = useState(localStorage.getItem("theme") === "dark");
+  const [dark, setDark] = useState(localStorage.getItem("theme") !== "light");
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -32,26 +32,49 @@ export default function Navbar() {
     .toUpperCase();
 
   return (
-    <header className="h-14 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-      <input
-        type="text"
-        placeholder="Search..."
-        className="w-64 px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300"
-      />
-      <div className="flex items-center gap-3">
+    <header
+      className="h-14 flex items-center justify-between px-5"
+      style={{ background: "var(--hq-panel)", borderBottom: "1px solid var(--hq-border)" }}
+    >
+      <div className="hq-glow flex items-center">
+        <input
+          type="text"
+          placeholder="SEARCH…"
+          className="w-64 px-3 py-1.5 text-xs font-mono-hq uppercase tracking-wide border outline-none"
+          style={{
+            background: "var(--hq-bg)",
+            borderColor: "var(--hq-border)",
+            color: "var(--hq-text)",
+          }}
+        />
+      </div>
+      <div className="flex items-center gap-4">
         <button
           onClick={() => setDark((d) => !d)}
-          className="text-sm px-2 py-1 rounded-md border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+          className="text-[11px] font-mono-hq uppercase tracking-wide px-2.5 py-1 border transition-colors"
+          style={{ borderColor: "var(--hq-border)", color: "var(--hq-text-dim)" }}
         >
-          {dark ? "Light" : "Dark"}
+          {dark ? "☾ Dark" : "☀ Light"}
         </button>
-        <span className="text-sm text-gray-700 dark:text-gray-300">{user?.name}</span>
-        <span className="text-xs px-2 py-1 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/40">
+        <span className="text-sm font-medium" style={{ color: "var(--hq-text)" }}>
+          {user?.name}
+        </span>
+        <span
+          className="flex items-center gap-2 pl-1 pr-2.5 py-1 text-[11px] font-mono-hq uppercase tracking-wide border"
+          style={{ borderColor: "var(--hq-border)", color: "var(--hq-amber)" }}
+        >
+          <span
+            className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
+            style={{ background: "var(--hq-amber)", color: "#0a0b0d" }}
+          >
+            {initials}
+          </span>
           {ROLE_LABELS[user?.role] || user?.role}
         </span>
         <button
           onClick={handleLogout}
-          className="text-sm text-gray-500 hover:text-red-500"
+          className="text-[11px] font-mono-hq uppercase tracking-wide transition-colors"
+          style={{ color: "var(--hq-text-dim)" }}
         >
           Logout
         </button>
