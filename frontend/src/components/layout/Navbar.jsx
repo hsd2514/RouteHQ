@@ -112,7 +112,7 @@ export default function Navbar() {
 
   return (
     <header
-      className="h-14 flex items-center justify-between px-5"
+      className="h-14 flex items-center justify-between px-5 relative"
       style={{ background: "var(--hq-panel)", borderBottom: "1px solid var(--hq-border)" }}
     >
       <div className="hq-glow flex items-center">
@@ -129,7 +129,7 @@ export default function Navbar() {
       </div>
       <div className="flex items-center gap-4">
         {/* Notification Bell Dropdown */}
-        <div className="relative h-full flex items-center" id="notification-dropdown-container">
+        <div id="notification-dropdown-container">
           <button
             onClick={handleToggleDropdown}
             className="text-[11px] font-mono-hq uppercase tracking-wide px-2.5 py-1.5 border transition-colors flex items-center justify-center relative hq-glow cursor-pointer"
@@ -149,7 +149,7 @@ export default function Navbar() {
 
           {isOpen && (
             <div
-              className="hq-rise absolute right-0 top-full mt-3 w-80 hq-panel p-4 z-50 shadow-xl text-xs"
+              className="hq-rise absolute top-14 right-5 mt-3 w-80 hq-panel p-4 z-50 shadow-xl text-xs"
               style={{ background: "var(--hq-panel)", borderColor: "var(--hq-border)" }}
             >
               <h3 className="font-display font-semibold uppercase tracking-wider text-xs border-b pb-1.5 mb-2" style={{ color: "var(--hq-text)", borderColor: "var(--hq-border)" }}>
