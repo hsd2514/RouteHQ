@@ -128,6 +128,7 @@ class TripCompleteIn(BaseModel):
     actual_distance: float
     fuel_consumed: float
     final_odometer: float
+    revenue: float = 0
 
 
 class TripOut(BaseModel):
@@ -143,6 +144,7 @@ class TripOut(BaseModel):
     actual_distance: float | None
     fuel_consumed: float | None
     fuel_efficiency: float | None
+    revenue: float | None
     status: str
     created_at: datetime
     dispatched_at: datetime | None
@@ -225,5 +227,7 @@ class VehicleCostRow(BaseModel):
     total_maintenance_cost: float
     total_expenses: float
     operational_cost: float
+    total_revenue: float
+    roi: float | None
     avg_fuel_efficiency: float | None
     trip_count: int

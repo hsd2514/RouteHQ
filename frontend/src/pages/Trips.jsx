@@ -137,6 +137,7 @@ const EMPTY_COMPLETE = {
   actual_distance: "",
   fuel_consumed: "",
   final_odometer: "",
+  revenue: "",
 };
 
 function CompleteModal({ trip, open, onClose, onCompleted, onError }) {
@@ -161,6 +162,7 @@ function CompleteModal({ trip, open, onClose, onCompleted, onError }) {
         actual_distance: Number(form.actual_distance),
         fuel_consumed: Number(form.fuel_consumed),
         final_odometer: Number(form.final_odometer),
+        revenue: form.revenue ? Number(form.revenue) : 0,
       });
       onClose();
       onCompleted();
@@ -190,6 +192,10 @@ function CompleteModal({ trip, open, onClose, onCompleted, onError }) {
         <div>
           <label className={labelCls}>Final Odometer (km)</label>
           <input id="complete-final-odometer" required type="number" min="0" step="0.1" placeholder="e.g. 12542" value={form.final_odometer} onChange={set("final_odometer")} className={inputCls} style={inputStyle} />
+        </div>
+        <div>
+          <label className={labelCls}>Revenue (₹, optional)</label>
+          <input id="complete-revenue" type="number" min="0" step="0.01" placeholder="e.g. 5000" value={form.revenue} onChange={set("revenue")} className={inputCls} style={inputStyle} />
         </div>
         <div className="flex justify-end gap-2 pt-1">
           <button type="button" onClick={onClose} className="text-sm px-4 py-1.5 border transition-colors" style={{ borderColor: "var(--hq-border)", color: "var(--hq-text-dim)" }}>
@@ -299,6 +305,7 @@ export default function Trips() {
     {
       key: "route",
       header: "Route",
+      sortable: false,
       render: (row) => (
         <span className="font-medium" style={{ color: "var(--hq-text)" }}>
           {row.source}
@@ -310,6 +317,7 @@ export default function Trips() {
     {
       key: "vehicle",
       header: "Vehicle",
+      sortable: false,
       render: (row) => {
         const vehicle = vehicleMap[row.vehicle_id];
         return vehicle ? (
@@ -322,6 +330,7 @@ export default function Trips() {
     {
       key: "driver",
       header: "Driver",
+      sortable: false,
       render: (row) => {
         const driver = driverMap[row.driver_id];
         return driver ? (

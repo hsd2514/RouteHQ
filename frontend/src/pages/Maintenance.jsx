@@ -90,6 +90,7 @@ export default function Maintenance() {
     {
       key: "vehicle",
       header: "Vehicle",
+      sortable: false,
       render: (row) => {
         const vehicle = vehicles.find((v) => v.id === row.vehicle_id);
         return vehicle ? `${vehicle.name} (${vehicle.reg_number})` : `Vehicle ID: ${row.vehicle_id}`;

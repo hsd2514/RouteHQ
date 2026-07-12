@@ -51,7 +51,7 @@ def run_seed(db: Session) -> None:
     suresh = drivers[3]
 
     trips = [
-        models.Trip(source="Gandhinagar Depot", destination="Ahmedabad Hub", vehicle_id=truck11.id, driver_id=priya.id, cargo_weight=3000, planned_distance=38, actual_distance=40, fuel_consumed=8, fuel_efficiency=5.0, status="completed", dispatched_at=datetime.utcnow() - timedelta(days=2), completed_at=datetime.utcnow() - timedelta(days=1)),
+        models.Trip(source="Gandhinagar Depot", destination="Ahmedabad Hub", vehicle_id=truck11.id, driver_id=priya.id, cargo_weight=3000, planned_distance=38, actual_distance=40, fuel_consumed=8, fuel_efficiency=5.0, revenue=32000, status="completed", dispatched_at=datetime.utcnow() - timedelta(days=2), completed_at=datetime.utcnow() - timedelta(days=1)),
         models.Trip(source="Vatva Industrial Area", destination="Sanand Warehouse", vehicle_id=truck04.id, driver_id=suresh.id, cargo_weight=2000, planned_distance=25, status="draft"),
         models.Trip(source="Mansa", destination="Kalol Depot", vehicle_id=van05.id, driver_id=alex.id, cargo_weight=300, planned_distance=32, status="cancelled"),
     ]

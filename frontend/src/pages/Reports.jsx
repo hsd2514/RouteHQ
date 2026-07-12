@@ -50,6 +50,20 @@ export default function Reports() {
     { key: "total_maintenance_cost", header: "Maintenance Cost", render: (row) => `₹${row.total_maintenance_cost.toLocaleString()}` },
     { key: "total_expenses", header: "Expenses", render: (row) => `₹${row.total_expenses.toLocaleString()}` },
     { key: "operational_cost", header: "Operational Cost", render: (row) => `₹${row.operational_cost.toLocaleString()}` },
+    { key: "total_revenue", header: "Revenue", render: (row) => `₹${row.total_revenue.toLocaleString()}` },
+    {
+      key: "roi",
+      header: "ROI",
+      render: (row) => {
+        if (row.roi === null || row.roi === undefined) return "N/A";
+        const pct = (row.roi * 100).toFixed(1);
+        return (
+          <span style={{ color: row.roi >= 0 ? "#22c55e" : "#ff4757" }}>
+            {row.roi >= 0 ? "+" : ""}{pct}%
+          </span>
+        );
+      },
+    },
     { key: "avg_fuel_efficiency", header: "Avg Fuel Efficiency", render: (row) => row.avg_fuel_efficiency ? `${row.avg_fuel_efficiency} km/l` : "N/A" },
     { key: "trip_count", header: "Trip Count" },
   ];

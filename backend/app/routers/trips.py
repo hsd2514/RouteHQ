@@ -111,6 +111,7 @@ def complete_trip(trip_id: int, payload: schemas.TripCompleteIn, db: Session = D
     trip.fuel_efficiency = (
         payload.actual_distance / payload.fuel_consumed if payload.fuel_consumed else None
     )
+    trip.revenue = payload.revenue
     trip.status = "completed"
     trip.completed_at = datetime.utcnow()
 

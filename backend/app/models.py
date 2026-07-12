@@ -60,6 +60,7 @@ class Trip(Base):
     actual_distance: Mapped[float | None] = mapped_column(Float, nullable=True)
     fuel_consumed: Mapped[float | None] = mapped_column(Float, nullable=True)
     fuel_efficiency: Mapped[float | None] = mapped_column(Float, nullable=True)
+    revenue: Mapped[float | None] = mapped_column(Float, nullable=True)
     status: Mapped[str] = mapped_column(String, default="draft")
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     dispatched_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

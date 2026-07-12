@@ -26,10 +26,18 @@ def _build_vehicle_cost_rows(db: Session) -> list[schemas.VehicleCostRow]:
         total_fuel_cost = sum(f.cost for f in fuel_logs)
         total_maintenance_cost = sum(m.cost for m in maintenance)
         total_expenses = sum(e.amount for e in expenses)
+        total_revenue = sum(t.revenue or 0 for t in completed_trips)
 
         avg_fuel_efficiency = (
             sum(t.fuel_efficiency for t in completed_trips) / len(completed_trips)
             if completed_trips
+            else None
+        )
+
+        # ROI = (Revenue - (Maintenance + Fuel)) / Acquisition Cost
+        roi = (
+            (total_revenue - (total_maintenance_cost + total_fuel_cost)) / vehicle.acquisition_cost
+            if vehicle.acquisition_cost
             else None
         )
 
@@ -42,6 +50,8 @@ def _build_vehicle_cost_rows(db: Session) -> list[schemas.VehicleCostRow]:
                 total_maintenance_cost=total_maintenance_cost,
                 total_expenses=total_expenses,
                 operational_cost=total_fuel_cost + total_maintenance_cost + total_expenses,
+                total_revenue=total_revenue,
+                roi=round(roi, 4) if roi is not None else None,
                 avg_fuel_efficiency=round(avg_fuel_efficiency, 2) if avg_fuel_efficiency else None,
                 trip_count=len(trips),
             )
@@ -70,13 +80,13 @@ def vehicle_costs_csv(
     writer.writerow([
         "vehicle_id", "reg_number", "name", "total_fuel_cost",
         "total_maintenance_cost", "total_expenses", "operational_cost",
-        "avg_fuel_efficiency", "trip_count",
+        "total_revenue", "roi", "avg_fuel_efficiency", "trip_count",
     ])
     for row in rows:
         writer.writerow([
             row.vehicle_id, row.reg_number, row.name, row.total_fuel_cost,
             row.total_maintenance_cost, row.total_expenses, row.operational_cost,
-            row.avg_fuel_efficiency, row.trip_count,
+            row.total_revenue, row.roi, row.avg_fuel_efficiency, row.trip_count,
         ])
     buffer.seek(0)
 
