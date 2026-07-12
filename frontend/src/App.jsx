@@ -12,6 +12,8 @@ import Reports from "./pages/Reports";
 import Signup from "./pages/Signup";
 import Trips from "./pages/Trips";
 import Vehicles from "./pages/Vehicles";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function AppLayout({ children }) {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/dashboard"
             element={

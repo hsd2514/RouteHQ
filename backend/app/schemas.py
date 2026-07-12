@@ -33,6 +33,15 @@ class TokenOut(BaseModel):
     user: UserOut
 
 
+class ForgotPasswordIn(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordIn(BaseModel):
+    token: str
+    new_password: str
+
+
 # ---------- Vehicles ----------
 
 class VehicleCreate(BaseModel):
