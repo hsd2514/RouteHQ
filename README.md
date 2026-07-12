@@ -60,6 +60,8 @@ It's a hackathon build, but the backend business-rule enforcement is written and
 
 Original wireframes are in [`Excali_Images/`](Excali_Images/).
 
+**Also throughout the app:** a notification bell in the navbar surfacing expiring licenses and vehicles in the shop, click-to-sort on every data table column, dark/light mode with the preference saved locally, and client-side search/filtering on every list page.
+
 ## Tech stack
 
 | Layer | Choice | Notes |
