@@ -14,6 +14,7 @@ import Trips from "./pages/Trips";
 import Vehicles from "./pages/Vehicles";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Settings from "./pages/Settings";
 
 function AppLayout({ children }) {
   return (
@@ -102,6 +103,16 @@ function App() {
               <ProtectedRoute>
                 <AppLayout>
                   <Reports />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Settings />
                 </AppLayout>
               </ProtectedRoute>
             }

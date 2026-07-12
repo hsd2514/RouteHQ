@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: "/maintenance", label: "Maintenance", glyph: "⚙" },
   { to: "/fuel-expenses", label: "Fuel & Expenses", glyph: "⛽" },
   { to: "/reports", label: "Analytics", glyph: "◭" },
+  { to: "/settings", label: "Settings", glyph: "⛭" },
 ];
 
 export default function Sidebar() {
