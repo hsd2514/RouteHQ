@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import client from "../api/client";
 import DataTable from "../components/shared/DataTable";
 import Modal from "../components/shared/Modal";
@@ -327,6 +327,16 @@ export default function Trips() {
   const [availDrivers, setAvailDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ── Lookup maps: id → object (rebuilt only when source arrays change) ───
+  const vehicleMap = useMemo(
+    () => Object.fromEntries(availVehicles.map((v) => [v.id, v])),
+    [availVehicles]
+  );
+  const driverMap = useMemo(
+    () => Object.fromEntries(availDrivers.map((d) => [d.id, d])),
+    [availDrivers]
+  );
+
   // Toast error
   const [toast, setToast] = useState("");
   function showError(msg) {
@@ -392,12 +402,14 @@ export default function Trips() {
   // ── Client-side filter ──────────────────────────────────────────────────
   const filtered = trips.filter((t) => {
     const q = search.toLowerCase();
+    const vehicle = vehicleMap[t.vehicle_id];
+    const driver = driverMap[t.driver_id];
     const matchSearch =
       !q ||
       t.source?.toLowerCase().includes(q) ||
       t.destination?.toLowerCase().includes(q) ||
-      t.vehicle?.reg_number?.toLowerCase().includes(q) ||
-      t.driver?.name?.toLowerCase().includes(q);
+      vehicle?.reg_number?.toLowerCase().includes(q) ||
+      driver?.name?.toLowerCase().includes(q);
     const matchStatus = statusFilter === "all" || t.status === statusFilter;
     return matchSearch && matchStatus;
   });
@@ -418,26 +430,30 @@ export default function Trips() {
     {
       key: "vehicle",
       header: "Vehicle",
-      render: (row) =>
-        row.vehicle ? (
+      render: (row) => {
+        const vehicle = vehicleMap[row.vehicle_id];
+        return vehicle ? (
           <span className="text-sm text-gray-600 dark:text-gray-300">
-            {row.vehicle.reg_number}
+            {vehicle.reg_number}
           </span>
         ) : (
           <span className="text-gray-400">—</span>
-        ),
+        );
+      },
     },
     {
       key: "driver",
       header: "Driver",
-      render: (row) =>
-        row.driver ? (
+      render: (row) => {
+        const driver = driverMap[row.driver_id];
+        return driver ? (
           <span className="text-sm text-gray-600 dark:text-gray-300">
-            {row.driver.name}
+            {driver.name}
           </span>
         ) : (
           <span className="text-gray-400">—</span>
-        ),
+        );
+      },
     },
     {
       key: "cargo_weight",
