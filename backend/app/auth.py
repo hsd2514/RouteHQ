@@ -13,6 +13,7 @@ from app import models
 JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret-change-me-in-production")
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
+RESET_TOKEN_EXPIRE_MINUTES = 15
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
@@ -34,6 +35,20 @@ def create_access_token(data: dict) -> str:
 
 def decode_access_token(token: str) -> dict:
     return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+
+
+def create_reset_token(data: dict) -> str:
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire, "type": "reset"})
+    return jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def decode_reset_token(token: str) -> dict:
+    payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    if payload.get("type") != "reset":
+        raise JWTError("Invalid token type")
+    return payload
 
 
 def get_current_user(

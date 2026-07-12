@@ -99,9 +99,14 @@ export default function Login() {
               />
             </div>
             <div>
-              <label className="text-[10px] uppercase tracking-[0.12em] font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>
-                Password
-              </label>
+              <div className="flex justify-between items-center">
+                <label className="text-[10px] uppercase tracking-[0.12em] font-mono-hq" style={{ color: "var(--hq-text-dim)" }}>
+                  Password
+                </label>
+                <Link to="/forgot-password" tabIndex="-1" className="text-[10px] uppercase tracking-[0.12em] font-mono-hq hover:underline" style={{ color: "var(--hq-amber)" }}>
+                  Forgot Password?
+                </Link>
+              </div>
               <input
                 type="password"
                 required
