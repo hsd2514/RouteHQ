@@ -325,16 +325,20 @@ export default function Trips() {
   const [trips, setTrips] = useState([]);
   const [availVehicles, setAvailVehicles] = useState([]);
   const [availDrivers, setAvailDrivers] = useState([]);
+  // Full (unfiltered) lists, used only to resolve display names for trips
+  // whose vehicle/driver is no longer "available" (e.g. dispatched/on_trip).
+  const [allVehicles, setAllVehicles] = useState([]);
+  const [allDrivers, setAllDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // ── Lookup maps: id → object (rebuilt only when source arrays change) ───
   const vehicleMap = useMemo(
-    () => Object.fromEntries(availVehicles.map((v) => [v.id, v])),
-    [availVehicles]
+    () => Object.fromEntries(allVehicles.map((v) => [v.id, v])),
+    [allVehicles]
   );
   const driverMap = useMemo(
-    () => Object.fromEntries(availDrivers.map((d) => [d.id, d])),
-    [availDrivers]
+    () => Object.fromEntries(allDrivers.map((d) => [d.id, d])),
+    [allDrivers]
   );
 
   // Toast error
@@ -357,14 +361,19 @@ export default function Trips() {
   async function fetchAll() {
     setLoading(true);
     try {
-      const [tripsRes, vehiclesRes, driversRes] = await Promise.all([
-        client.get("/trips"),
-        client.get("/vehicles?status=available"),
-        client.get("/drivers?assignable=true"),
-      ]);
+      const [tripsRes, vehiclesRes, driversRes, allVehiclesRes, allDriversRes] =
+        await Promise.all([
+          client.get("/trips"),
+          client.get("/vehicles?status=available"),
+          client.get("/drivers?assignable=true"),
+          client.get("/vehicles"),
+          client.get("/drivers"),
+        ]);
       setTrips(tripsRes.data);
       setAvailVehicles(vehiclesRes.data);
       setAvailDrivers(driversRes.data);
+      setAllVehicles(allVehiclesRes.data);
+      setAllDrivers(allDriversRes.data);
     } finally {
       setLoading(false);
     }
