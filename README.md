@@ -48,13 +48,13 @@ It's a hackathon build, but the backend business-rule enforcement is written and
 
 | Page | Who can act on it |
 |---|---|
-| **Dashboard** | Everyone (read-only) — KPIs, cost-per-vehicle bar chart, status pie chart, license-expiry banner |
+| **Dashboard** | Everyone (read-only) — KPIs, cost-per-vehicle bar chart, status pie chart, license-expiry banner, filterable by vehicle type/status/region |
 | **Vehicle Registry** | `fleet_manager` writes; everyone reads |
 | **Drivers & Safety** | `fleet_manager`, `safety_officer` write; everyone reads |
 | **Trip Dispatcher** | `fleet_manager`, `driver` (dispatcher role) act; everyone reads |
 | **Maintenance** | `fleet_manager` writes; everyone reads |
 | **Fuel & Expenses** | `fleet_manager`, `financial_analyst`, `driver` write; everyone reads |
-| **Reports & Analytics** | Everyone (read-only) — cost table + CSV export |
+| **Reports & Analytics** | Everyone (read-only) — cost table with ROI + CSV export |
 | **Settings & RBAC** | Everyone — general prefs (local only) + a live view of the permission matrix below |
 | **Login / Signup / Forgot / Reset Password** | Public |
 
@@ -71,7 +71,7 @@ Original wireframes are in [`Excali_Images/`](Excali_Images/).
 | Frontend | React 18 + Vite + Tailwind CSS v4 | Plain JavaScript, no TypeScript |
 | Charts | Recharts | Dashboard bar/pie charts |
 | State | React Context + `useReducer` for auth; local `useState` everywhere else | No Redux |
-| Tests | pytest + FastAPI `TestClient`, isolated test database | 27 tests covering every business rule |
+| Tests | pytest + FastAPI `TestClient`, isolated test database | 30 tests covering every business rule |
 
 ## Getting started
 
@@ -147,7 +147,9 @@ All enforced **server-side**, inside a single DB transaction per action. The fro
 
 On success: trip → `dispatched`, vehicle → `on_trip`, driver → `on_trip`.
 
-**Trip completion** (`POST /trips/{id}/complete`) only from `dispatched`. Computes `fuel_efficiency = actual_distance / fuel_consumed` (null-guarded against divide-by-zero), rejects if the final odometer reading is behind the current one, and frees the vehicle/driver back to `available`.
+**Trip completion** (`POST /trips/{id}/complete`) only from `dispatched`. Computes `fuel_efficiency = actual_distance / fuel_consumed` (null-guarded against divide-by-zero), optionally records the trip's `revenue` (defaults to 0 if omitted), rejects if the final odometer reading is behind the current one, and frees the vehicle/driver back to `available`.
+
+**Vehicle ROI** (`GET /reports/vehicle-costs`) — `ROI = (Revenue − (Maintenance + Fuel)) / Acquisition Cost` per vehicle, summed across its completed trips' revenue. Null-guarded when `acquisition_cost` is 0.
 
 **Trip cancel** (`POST /trips/{id}/cancel`) allowed from `draft` or `dispatched`; restores vehicle/driver to `available` if it was mid-trip.
 
@@ -227,13 +229,14 @@ cd backend
 uv run pytest -v
 ```
 
-27 tests, covering:
+30 tests, covering:
 - every trip dispatch rejection path (capacity, vehicle/driver status, expired license, double-dispatch)
 - trip completion (fuel-efficiency math, divide-by-zero guard, odometer regression guard)
 - trip cancellation and resource restoration
 - maintenance open/close and the "can't service a vehicle mid-trip" rule
 - registry uniqueness constraints and dropdown filtering
 - the full auth flow: signup, login, enumeration-safe forgot-password, single-use reset tokens, and rejection of a login token used as a reset token
+- revenue/ROI math and the zero-acquisition-cost null guard
 
 Tests run against a dedicated `transitops_test` database (auto-created on first run) so they never touch your seeded dev data.
 
